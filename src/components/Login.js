@@ -4,26 +4,39 @@ import { useState, useEffect } from "react";
 import { iconLogo } from "../consttants";
 import Input from "../ui/Input";
 
+import { useDispatch, useSelector } from "react-redux";
+import { loginUserStart } from "../slice/auth";
+
 const Login = () => {
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
+
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.auth);
+
+  console.log(isLoading);
 
   useEffect(() => {
     console.log(name);
   }, [name]);
 
+  const loginHandler = (e) => {
+    e.preventDefault();
+    dispatch(loginUserStart());
+  };
+
   return (
     <div>
-      <main class="form-signin w-25 m-auto">
+      <main className="form-signin w-25 m-auto">
         <form>
           <img
-            class="mb-4 mt-5"
+            className="mb-4 mt-5"
             src={iconLogo}
             alt=""
             width="150"
             height="150"
           />
-          <h1 class="h3 mb-3 fw-normal">Please Login</h1>
+          <h1 className="h3 mb-3 fw-normal">Please Login</h1>
 
           <Input
             label={"User name or number"}
@@ -37,10 +50,15 @@ const Login = () => {
             setState={setPwd}
           />
 
-          <button class=" mt-5 w-100 btn btn-lg btn-primary" type="submit">
-            Login
+          <button
+            className=" mt-5 w-100 btn btn-lg btn-primary"
+            onClick={loginHandler}
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? "loading.." : "Login"}
           </button>
-          <p class="mt-5 mb-3 text-muted">© 2020–2023 Invoice</p>
+          <p className="mt-5 mb-3 text-muted">© 2020–2023 Invoice</p>
         </form>
       </main>
     </div>
