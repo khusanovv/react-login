@@ -1,11 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
 import { iconLogo } from "../consttants";
 import Input from "../ui/Input";
-
+import {
+  loginUserFeilure,
+  loginUserSucces,
+  loginUserStart,
+} from "../slice/auth";
+import AuthService from "../service/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUserStart } from "../slice/auth";
 
 const Login = () => {
   const [name, setName] = useState("");
@@ -20,9 +23,17 @@ const Login = () => {
     console.log(name);
   }, [name]);
 
-  const loginHandler = (e) => {
+  const loginHandler = async (e) => {
     e.preventDefault();
     dispatch(loginUserStart());
+    const user = { name };
+    try {
+      const response = await AuthService.userLogin(user);
+      console.log(response);
+      dispatch(loginUserSucces());
+    } catch (error) {
+      dispatch(loginUserFeilure());
+    }
   };
 
   return (
